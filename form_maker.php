@@ -1,7 +1,7 @@
 <?php
 class form
 {
-	public function open_form($method='POST', $action=null, $class=null)
+	public function open_form($method = 'POST', $action = null, $class = null): string
 	{
 		$return = '<form method="'.$method.'" action="'.$action.'" class="'.$class.'">'."\n";
 		return $return;
@@ -13,7 +13,7 @@ class form
 		return $return;
 	}
 
-	public function input($type, $name=false, $value=false, $id=false, $extra=false)
+	public function input($type, $name = false, $value = false, $id = false, $extra = false): string
 	{
 		$return = '<input type="'.$type.'" ';
 		if ($extra) {
@@ -26,17 +26,18 @@ class form
 		return $return;
 	}
 
-	public function text_area($name=false, $value=false, $id=false, $extra=false)
+	public function text_area($name = false, $value = false, $id = false, $extra = false): string
 	{
 		$return = '<textarea name="'.$name.'"';
 		if ($extra) {
 			foreach ($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
 		}
+		if ($id) $return .= 'id="'.$id.'"';
 		$return .= '>'.$value.'</textarea>'."\n";
 		return $return;
 	}
 
-	public function drop_down($options, $selected=false, $extra=false)
+	public function drop_down($options = [], $selected = [], $extra = false): string
 	{
 		$return = '<select'."\n";
 		if ($extra) {
@@ -62,6 +63,19 @@ class form
 		return $return;
 	}
 
+	public function button($type, $name = false, $content = '', $id = false, $extra = false)
+	{
+		if (!in_array($type, ['button', 'reset', 'submit'])) $type = 'button';
+		$return = '<button type="'.$type.'"';
+		if ($id) $return .= 'id="'.$id.'"';
+		if ($extra) {
+			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
+		}
+		$return .= '>';
+		$return .= $content.'</button>';
+		return $return;
+	}
+
 }
 
 $form = new form;
@@ -79,4 +93,5 @@ echo $form->drop_down($options, 'med', ['id'=>'size']);
 echo $form->text_area('textarea', 'text...', extra:['placeholder'=>'Your address']);
 echo $form->input('submit', 'btn', 'Send');
 echo $form->input('reset', 'res', 'Restart', extra:['onclick'=>"alert('form will be clean')"]);
+echo $form->button('reset', 'testbtn', content:'Test button', id:'test_id');
 echo $form->close_form();
