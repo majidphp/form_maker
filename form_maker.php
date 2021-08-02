@@ -37,9 +37,9 @@ class form
 		return $return;
 	}
 
-	public function drop_down($options = [], $selected = [], $multiple = false, $extra = false): string
+	public function drop_down($name = false, $options = [], $selected = [], $multiple = false, $extra = false): string
 	{
-		$return = '<select'."\n";
+		$return = '<select name="'.$name.'"'."\n";
 		if ($multiple) $return .= ' multiple="multiple"';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
@@ -77,6 +77,29 @@ class form
 		return $return;
 	}
 
+	public function checkbox($name = false, $options = [], $extra = false): string
+	{
+		$return = '';
+		foreach ($options as $checkbox) {
+			$return .= '<input type="checkbox" name="'.$name.'" value="'.$checkbox['value'].'"';
+			if ($checkbox['id']) {
+				$return .= 'id="'.$checkbox['id'].'"';
+			}
+			if ($extra) {
+				foreach($extra as $k => $v) { $return .= ' '.$k.'="'.$v.'"'; }
+			}
+			if ($checkbox['cehcked']) {
+				$return .= ' checked';
+			}
+			$return .= ' /><lable ';
+			if ($checkbox['id']) {
+				$return .= 'for="'.$checkbox['id'].'"';
+			}
+			$return .= '>'.$checkbox['title'].'</lable>'."\n";
+		}
+		return $return;
+	}
+
 }
 
 $form = new form;
@@ -90,9 +113,15 @@ $options = [
     'large'  => 'Large Shirt',
     'xlarge' => 'Extra Large Shirt',
 ];
-echo $form->drop_down($options, ['med', 'small_2'], true, ['id'=>'size']);
+echo $form->drop_down('selectboxname', $options, ['med', 'small_2'], true, ['id'=>'size']);
 echo $form->text_area('textarea', 'text...', extra:['placeholder'=>'Your address']);
 echo $form->input('submit', 'btn', 'Send');
 echo $form->input('reset', 'res', 'Restart', extra:['onclick'=>"alert('form will be clean')"]);
+echo "<br/>";
+$options = [
+	['value'=>'m1', 'title'=>'M1', 'cehcked'=>true],
+	['value'=>'m2', 'title'=>'M2', 'id'=>'id_m2'],
+];
+echo $form->checkbox('checkboxname', $options);
 echo $form->button('reset', 'testbtn', content:'Test button', id:'test_id');
 echo $form->close_form();
