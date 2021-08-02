@@ -80,6 +80,9 @@ class form
 	public function checkbox($name = false, $options = [], $extra = false): string
 	{
 		$return = '';
+		if (count($options) > 0) {
+			$name .= '[]';
+		}
 		foreach ($options as $checkbox) {
 			$return .= '<input type="checkbox" name="'.$name.'" value="'.$checkbox['value'].'"';
 			if ($checkbox['id']) {
@@ -96,6 +99,50 @@ class form
 				$return .= 'for="'.$checkbox['id'].'"';
 			}
 			$return .= '>'.$checkbox['title'].'</lable>'."\n";
+		}
+		return $return;
+	}
+
+	public function radio($name = false, $options = [], $extra = false): string
+	{
+		$return = '';
+		foreach ($options as $radio) {
+			$return .= '<input type="radio" name="'.$name.'" value="'.$radio['value'].'"';
+			if ($radio['id']) {
+				$return .= 'id="'.$radio['id'].'"';
+			}
+			if ($extra) {
+				foreach($extra as $k => $v) { $return .= ' '.$k.'="'.$v.'"'; }
+			}
+			if ($radio['cehcked']) {
+				$return .= ' checked';
+			}
+			$return .= ' /><lable ';
+			if ($radio['id']) {
+				$return .= 'for="'.$radio['id'].'"';
+			}
+			$return .= '>'.$radio['title'].'</lable>'."\n";
+		}
+		return $return;
+	}
+
+	public function range($min = false, $max = '', $step = false, $value = false, $show = false, $id = false, $extra = false): string
+	{
+		$return = '<input type="range" min="'.$min.'" max="'.$max.'" value="'.$value.'" step="'.$step.'"';
+		if ($extra) {
+			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
+		}
+		if ($id) {
+			$return .= 'id="'.$id.'"';
+			$lableId = "range_$id";
+		} else {
+			$labledId = 'range_'.rand();
+		}
+		if ($show) {
+			$return .= " oninput=\"document.getElementById('$labledId').innerHTML = this.value\" />
+			<lable id=\"$labledId\">".$value.'</lable>';
+		} else {
+			$return .= ' />';
 		}
 		return $return;
 	}
@@ -123,5 +170,14 @@ $options = [
 	['value'=>'m2', 'title'=>'M2', 'id'=>'id_m2'],
 ];
 echo $form->checkbox('checkboxname', $options);
+echo "<br/>";
+$options = [
+	['value'=>'r1', 'title'=>'R1', 'checked'=>true],
+	['value'=>'m2', 'title'=>'R2', 'id'=>'id_m2'],
+];
+echo $form->radio('radioname', $options);
+echo $form->input('file', 'upload_file');
+echo "<br/>";
+echo $form->range(10, 20, 1, 15, show:true);
 echo $form->button('reset', 'testbtn', content:'Test button', id:'test_id');
 echo $form->close_form();
