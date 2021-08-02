@@ -1,13 +1,13 @@
 <?php
 class form
 {
-	public function openForm($method='POST', $action=null, $class=null)
+	public function open_form($method='POST', $action=null, $class=null)
 	{
 		$return = '<form method="'.$method.'" action="'.$action.'" class="'.$class.'">'."\n";
 		return $return;
 	}
 
-	public function closeForm()
+	public function close_form()
 	{
 		$return = '</form>';
 		return $return;
@@ -36,7 +36,7 @@ class form
 		return $return;
 	}
 
-	public function drop_down($options, $extra=false)
+	public function drop_down($options, $selected=false, $extra=false)
 	{
 		$return = '<select'."\n";
 		if ($extra) {
@@ -47,11 +47,15 @@ class form
 			if (is_array($val)) {
 				$return .= '<optgroup label="'.$key.'">';
 				foreach ($val as $k => $v) {
-					$return .= '<option value="'.$k.'">'.$v.'</option>'."\n";
+					$return .= '<option value="'.$k.'"';
+					if ($k === $selected) $return .= 'selected';
+					$return .= '>'.$v.'</option>'."\n";
 				}
 				$return .= '</optgroup>';
 			} else {
-				$return .= '<option value="'.$key.'">'.$val.'</option>'."\n";
+				$return .= '<option value="'.$key.'"';
+				if ($key === $selected) $return .= 'selected';
+				$return .= '>'.$val.'</option>'."\n";
 			}
 		}
 		$return .= '</select>'."\n";
@@ -61,7 +65,7 @@ class form
 }
 
 $form = new form;
-echo $form->openForm('GET', 'test.php', 'green');
+echo $form->open_form('GET', 'test.php', 'green');
 echo $form->input('text', value:'Majid', extra:['onblur'=>"alert('Hi event')", 'placeholder'=>'Please enter your name']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
@@ -71,8 +75,8 @@ $options = [
     'large'  => 'Large Shirt',
     'xlarge' => 'Extra Large Shirt',
 ];
-echo $form->drop_down($options);
+echo $form->drop_down($options, 'med', ['id'=>'size']);
 echo $form->text_area('textarea', 'text...', extra:['placeholder'=>'Your address']);
 echo $form->input('submit', 'btn', 'Send');
 echo $form->input('reset', 'res', 'Restart', extra:['onclick'=>"alert('form will be clean')"]);
-echo $form->closeForm();
+echo $form->close_form();
