@@ -37,9 +37,10 @@ class form
 		return $return;
 	}
 
-	public function drop_down($options = [], $selected = [], $extra = false): string
+	public function drop_down($options = [], $selected = [], $multiple = false, $extra = false): string
 	{
 		$return = '<select'."\n";
+		if ($multiple) $return .= ' multiple="multiple"';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
 		}
@@ -49,13 +50,13 @@ class form
 				$return .= '<optgroup label="'.$key.'">';
 				foreach ($val as $k => $v) {
 					$return .= '<option value="'.$k.'"';
-					if ($k === $selected) $return .= 'selected';
+					if (in_array($k, $selected)) $return .= 'selected';
 					$return .= '>'.$v.'</option>'."\n";
 				}
 				$return .= '</optgroup>';
 			} else {
 				$return .= '<option value="'.$key.'"';
-				if ($key === $selected) $return .= 'selected';
+				if (in_array($key, $selected)) $return .= 'selected';
 				$return .= '>'.$val.'</option>'."\n";
 			}
 		}
@@ -63,7 +64,7 @@ class form
 		return $return;
 	}
 
-	public function button($type, $name = false, $content = '', $id = false, $extra = false)
+	public function button($type, $name = false, $content = '', $id = false, $extra = false): string
 	{
 		if (!in_array($type, ['button', 'reset', 'submit'])) $type = 'button';
 		$return = '<button type="'.$type.'"';
@@ -89,7 +90,7 @@ $options = [
     'large'  => 'Large Shirt',
     'xlarge' => 'Extra Large Shirt',
 ];
-echo $form->drop_down($options, 'med', ['id'=>'size']);
+echo $form->drop_down($options, ['med', 'small_2'], true, ['id'=>'size']);
 echo $form->text_area('textarea', 'text...', extra:['placeholder'=>'Your address']);
 echo $form->input('submit', 'btn', 'Send');
 echo $form->input('reset', 'res', 'Restart', extra:['onclick'=>"alert('form will be clean')"]);
