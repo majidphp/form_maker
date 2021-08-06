@@ -1,7 +1,7 @@
 <?php
 /**
 * This is a HTML form maker made with PHP
-* @file formMaker.php
+* @file form_maker.php
 * @author MajidPHP
 * @date 5 August 2021
 * PHP version >= 8
