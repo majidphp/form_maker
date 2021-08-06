@@ -1,7 +1,7 @@
 <?php
 /**
 * This is a HTML form maker made with PHP
-* @file form_maker.php
+* @file formMaker.php
 * @author MajidPHP
 * @date 5 August 2021
 * PHP version >= 8
@@ -122,13 +122,13 @@ class form
 		$return = '';
 		foreach ($options as $radio) {
 			$return .= '<input type="radio" name="'.$name.'" value="'.$radio['value'].'"';
-			if ($radio['id']) $return .= 'id="'.$radio['id'].'"';
+			if ($radio['id']) $return .= ' id="'.$radio['id'].'"';
 			if ($extra) {
 				foreach($extra as $k => $v) { $return .= ' '.$k.'="'.$v.'"'; }
 			}
 			if ($radio['cehcked']) $return .= ' checked';
 			if ($class) $return .= ' class="'.$class.'"';
-			$return .= ' /><lable ';
+			$return .= '/><lable ';
 			if ($radio['id']) $return .= 'for="'.$radio['id'].'"';
 			$return .= '>'.$radio['title'].'</lable>'."\n";
 		}
@@ -197,8 +197,8 @@ $options = [
 echo $form->checkbox('checkboxname', $options);
 echo "<br/>";
 $options = [
-	['value'=>'r1', 'title'=>'R1', 'checked'=>true],
-	['value'=>'m2', 'title'=>'R2', 'id'=>'id_m2'],
+	['value'=>'r1', 'title'=>'R1', 'cehcked'=>true],
+	['value'=>'r2', 'title'=>'R2', 'id'=>'id_m2'],
 ];
 echo $form->radio('radioname', $options);
 echo $form->input('file', 'upload_file');
