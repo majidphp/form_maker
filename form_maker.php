@@ -1,4 +1,12 @@
 <?php
+/**
+* This is a HTML form maker made with PHP
+* @file formMaker.php
+* @author MajidPHP
+* @date 5 August 2021
+* PHP version >= 8
+* version 1.0
+*/
 class form
 {
 	public function open_form($method = 'POST', $action = null, $class = null, $upload = false): string
@@ -15,9 +23,10 @@ class form
 		return $return;
 	}
 
-	public function input($type, $name = false, $value = false, $id = false, $required = false, $extra = false): string
+	public function input($type, $name = false, $value = false, $id = false, $class = false, $required = false, $extra = false): string
 	{
 		$return = '<input type="'.$type.'" ';
+		if ($class) $return .= ' class="'.$class.'"';
 		if ($required) $return .= ' required ';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
@@ -29,9 +38,10 @@ class form
 		return $return;
 	}
 
-	public function text_area($name = false, $value = false, $id = false,$required = false, $extra = false): string
+	public function text_area($name = false, $value = false, $id = false, $class = false, $required = false, $extra = false): string
 	{
 		$return = '<textarea name="'.$name.'"';
+		if ($class) $return .= ' class="'.$class.'"';
 		if ($required) $return .= ' required ';
 		if ($extra) {
 			foreach ($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
@@ -41,10 +51,12 @@ class form
 		return $return;
 	}
 
-	public function drop_down($name = false, $options = [], $selected = [], $multiple = false, $extra = false): string
+	public function drop_down($name = false, $options = [], $selected = [], $multiple = false, $class = false, $id = false, $extra = false): string
 	{
 		$return = '<select name="'.$name.'"'."\n";
 		if ($multiple) $return .= ' multiple="multiple"';
+		if ($class) $return .= ' class="'.$class.'"';
+		if ($id) $return .= ' id="'.$id.'"';
 		if ($required) $return .= ' required ';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
@@ -69,10 +81,11 @@ class form
 		return $return;
 	}
 
-	public function button($type, $name = false, $content = '', $id = false, $extra = false): string
+	public function button($type, $name = false, $content = '', $class = false, $id = false, $extra = false): string
 	{
 		if (!in_array($type, ['button', 'reset', 'submit'])) $type = 'button';
 		$return = '<button type="'.$type.'"';
+		if ($class) $return .= ' class="'.$class.'"';
 		if ($id) $return .= 'id="'.$id.'"';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
@@ -82,7 +95,7 @@ class form
 		return $return;
 	}
 
-	public function checkbox($name = false, $options = [], $extra = false): string
+	public function checkbox($name = false, $options = [], $class = false, $extra = false): string
 	{
 		$return = '';
 		if (count($options) > 0) {
@@ -96,47 +109,39 @@ class form
 			if ($extra) {
 				foreach($extra as $k => $v) { $return .= ' '.$k.'="'.$v.'"'; }
 			}
-			if ($checkbox['cehcked']) {
-				$return .= ' checked';
-			}
+			if ($checkbox['cehcked']) $return .= ' checked';
 			$return .= ' /><lable ';
-			if ($checkbox['id']) {
-				$return .= 'for="'.$checkbox['id'].'"';
-			}
+			if ($checkbox['id']) $return .= 'for="'.$checkbox['id'].'"';
 			$return .= '>'.$checkbox['title'].'</lable>'."\n";
 		}
 		return $return;
 	}
 
-	public function radio($name = false, $options = [], $extra = false): string
+	public function radio($name = false, $options = [], $class = false, $extra = false): string
 	{
 		$return = '';
 		foreach ($options as $radio) {
 			$return .= '<input type="radio" name="'.$name.'" value="'.$radio['value'].'"';
-			if ($radio['id']) {
-				$return .= 'id="'.$radio['id'].'"';
-			}
+			if ($radio['id']) $return .= 'id="'.$radio['id'].'"';
 			if ($extra) {
 				foreach($extra as $k => $v) { $return .= ' '.$k.'="'.$v.'"'; }
 			}
-			if ($radio['cehcked']) {
-				$return .= ' checked';
-			}
+			if ($radio['cehcked']) $return .= ' checked';
+			if ($class) $return .= ' class="'.$class.'"';
 			$return .= ' /><lable ';
-			if ($radio['id']) {
-				$return .= 'for="'.$radio['id'].'"';
-			}
+			if ($radio['id']) $return .= 'for="'.$radio['id'].'"';
 			$return .= '>'.$radio['title'].'</lable>'."\n";
 		}
 		return $return;
 	}
 
-	public function range($min = false, $max = '', $step = false, $value = false, $show = false, $id = false, $extra = false): string
+	public function range($min = false, $max = '', $step = false, $value = false, $show = false, $id = false, $class = false, $extra = false): string
 	{
 		$return = '<input type="range" min="'.$min.'" max="'.$max.'" value="'.$value.'" step="'.$step.'"';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
 		}
+		if ($class) $return .= ' class="'.$class.'"';
 		if ($id) {
 			$return .= 'id="'.$id.'"';
 			$lableId = "range_$id";
@@ -152,11 +157,26 @@ class form
 		return $return;
 	}
 
+	public function lable($id = false, $text = false, $class = false, $extra = false)
+	{
+		$return = '<lable';
+		if ($id) $return .= ' for="'.$id.'"';
+		if ($class) $return .= ' class="'.$class.'"';
+		if ($extra) {
+			foreach($extra as $k => $v) { $return .= ' '.$k.'="'.$v.'"'; }
+		}
+		$return .='>';
+		if ($text) $return .= $text;
+		$return .= '</lable>'."\n";
+		return $return;
+	}
+
 }
 
 $form = new form;
 echo $form->open_form('GET', 'test.php', upload:true);
-echo $form->input('text', value:'Majid', required:true, extra:['onblur'=>"alert('Hi event')", 'placeholder'=>'Please enter your name']);
+echo $form->lable('u_name', 'Your Name');
+echo $form->input('text', value:'Majid', required:true, id:'u_name', extra:['placeholder'=>'Please enter your name']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
 $options = [
