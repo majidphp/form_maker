@@ -171,14 +171,30 @@ class form
 		return $return;
 	}
 
+	public function open_fieldset($title = false, $class = false)
+	{
+		$return = '<fieldset';
+		if ($class) $return .= ' class="'.$class.'"';
+		$return .= '>'."\n";
+		if ($title) $return .= '<legend>'.$title.'</legend>'."\n";
+		return $return;
+	}
+
+	public function close_fieldset()
+	{
+		return '</fieldset>'."\n";
+	}
+
 }
 
 $form = new form;
 echo $form->open_form('GET', 'test.php', upload:true);
+echo $form->open_fieldset('Form group');
 echo $form->lable('u_name', 'Your Name');
 echo $form->input('text', value:'Majid', required:true, id:'u_name', extra:['placeholder'=>'Please enter your name']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
+echo $form->close_fieldset();
 $options = [
 	'small'  => ['small_1'=>1,'small_2'=>2,'small_3'=>3],
     'med'    => 'Medium Shirt',
