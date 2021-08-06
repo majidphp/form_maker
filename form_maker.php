@@ -1,9 +1,11 @@
 <?php
 class form
 {
-	public function open_form($method = 'POST', $action = null, $class = null): string
+	public function open_form($method = 'POST', $action = null, $class = null, $upload = false): string
 	{
-		$return = '<form method="'.$method.'" action="'.$action.'" class="'.$class.'">'."\n";
+		$return = '<form method="'.$method.'" action="'.$action.'" class="'.$class.'"';
+		if ($upload) $return .= ' enctype="multipart/form-data"';
+		$return .= '>'."\n";
 		return $return;
 	}
 
@@ -13,9 +15,10 @@ class form
 		return $return;
 	}
 
-	public function input($type, $name = false, $value = false, $id = false, $extra = false): string
+	public function input($type, $name = false, $value = false, $id = false, $required = false, $extra = false): string
 	{
 		$return = '<input type="'.$type.'" ';
+		if ($required) $return .= ' required ';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
 		}
@@ -26,9 +29,10 @@ class form
 		return $return;
 	}
 
-	public function text_area($name = false, $value = false, $id = false, $extra = false): string
+	public function text_area($name = false, $value = false, $id = false,$required = false, $extra = false): string
 	{
 		$return = '<textarea name="'.$name.'"';
+		if ($required) $return .= ' required ';
 		if ($extra) {
 			foreach ($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
 		}
@@ -41,6 +45,7 @@ class form
 	{
 		$return = '<select name="'.$name.'"'."\n";
 		if ($multiple) $return .= ' multiple="multiple"';
+		if ($required) $return .= ' required ';
 		if ($extra) {
 			foreach($extra as $key => $val) { $return .= ' '.$key.'="'.$val.'"'; }
 		}
@@ -150,8 +155,8 @@ class form
 }
 
 $form = new form;
-echo $form->open_form('GET', 'test.php', 'green');
-echo $form->input('text', value:'Majid', extra:['onblur'=>"alert('Hi event')", 'placeholder'=>'Please enter your name']);
+echo $form->open_form('GET', 'test.php', upload:true);
+echo $form->input('text', value:'Majid', required:true, extra:['onblur'=>"alert('Hi event')", 'placeholder'=>'Please enter your name']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
 echo $form->input('password', 'password[]', extra:['placeholder'=>'Pawwsord']);
 $options = [
@@ -161,7 +166,7 @@ $options = [
     'xlarge' => 'Extra Large Shirt',
 ];
 echo $form->drop_down('selectboxname', $options, ['med', 'small_2'], true, ['id'=>'size']);
-echo $form->text_area('textarea', 'text...', extra:['placeholder'=>'Your address']);
+echo $form->text_area('textarea', 'text...', extra:['placeholder'=>'Your address'], required:true);
 echo $form->input('submit', 'btn', 'Send');
 echo $form->input('reset', 'res', 'Restart', extra:['onclick'=>"alert('form will be clean')"]);
 echo "<br/>";
